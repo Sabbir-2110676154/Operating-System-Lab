@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    int a = 10, b = 5;
+    pid_t pid1, pid2, pid3;
+
+    printf("Parent process started. PID: %d\n", getpid());
+
+    pid1 = fork();
+    if (pid1 == 0) {
+        // Child 1: Addition
+        printf("Child 1 (Addition): PID = %d, PPID = %d\n", getpid(), getppid());
+        printf("Addition: %d + %d = %d\n", a, b, a + b);
+        exit(0);
+    } else {
+        pid2 = fork();
+        if (pid2 == 0) {
+            // Child 2: Subtraction
+            printf("Child 2 (Subtraction): PID = %d, PPID = %d\n", getpid(), getppid());
+            printf("Subtraction: %d - %d = %d\n", a, b, a - b);
+            exit(0);
+        } else {
+            pid3 = fork();
+            if (pid3 == 0) {
+                // Child 3: Multiplication
+                printf("Child 3 (Multiplication): PID = %d, PPID = %d\n", getpid(), getppid());
+                printf("Multiplication: %d * %d = %d\n", a, b, a * b);
+                exit(0);
+            } else {
+                // Parent process waits for all children
+                wait(NULL);
+                wait(NULL);
+                wait(NULL);
+                printf("Parent process (PID %d) finished.\n", getpid());
+            }
+        }
+    }
+
+    return 0;
+}
+//Sample output:
+/*Parent process started. PID: 12456
+Child 1 (Addition): PID = 12457, PPID = 12456
+Addition: 10 + 5 = 15
+Child 2 (Subtraction): PID = 12458, PPID = 12456
+Subtraction: 10 - 5 = 5
+Child 3 (Multiplication): PID = 12459, PPID = 12456
+Multiplication: 10 * 5 = 50
+Parent process (PID 12456) finished.
+*/
