@@ -5,10 +5,12 @@ int count = 0;
 pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 
 void* inc(void* a) {
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 100; i++) {
+        printf("Before count: %d\n", count);
         pthread_mutex_lock(&m);
         count++;
         pthread_mutex_unlock(&m);
+        printf("After count: %d\n", count);
     }
     return NULL;
 }
