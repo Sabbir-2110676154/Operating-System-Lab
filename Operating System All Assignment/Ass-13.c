@@ -4,7 +4,11 @@
 int count = 0;
 
 void* inc(void* a) {
-    for (int i = 0; i < 100000; i++) count++;
+    for (int i = 0; i < 100; i++) {
+        printf("Before count: %d\n", count);
+        count++;
+        printf("After count: %d\n", count);
+    }
     return NULL;
 }
 
