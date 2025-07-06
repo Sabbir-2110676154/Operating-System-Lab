@@ -9,9 +9,17 @@ int main() {
     *count = 0;
 
     if (fork() == 0) {
-        for (int i = 0; i < 100000; i++) (*count)++;
+        for (int i = 0; i < 100; i++) {
+            printf("Before count: %d\n", count);
+            (*count)++;
+            printf("After count: %d\n", count);
+        }
     } else {
-        for (int i = 0; i < 100000; i++) (*count)++;
+        for (int i = 0; i < 100000; i++){
+            printf("Before count: %d\n", count);
+            (*count)++;
+            printf("After count: %d\n", count);
+        }
         wait(NULL);
         printf("Final count: %d\n", *count);
         shmctl(id, IPC_RMID, NULL);
