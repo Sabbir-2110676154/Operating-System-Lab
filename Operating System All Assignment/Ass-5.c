@@ -1,30 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
-int main(int argc, char *argv[]) {
-    if (argc < 3) {
-        printf("Usage: %s n child_1 child_2 ... child_n\n", argv[0]);
-        return 1;
-    }
-
-    int n = atoi(argv[1]);
-    for (int i = 0; i < n; i++) {
-        pid_t pid = fork();
-        if (pid == 0) {
-            printf("%s (PID: %d, PPID: %d)\n", argv[2 + i], getpid(), getppid());
+int main() {
+   
+    int Pid1, Pid2, Pid3;
+    printf("Parent Process Started: PID %d\n", getpid());
+    Pid1 = fork();
+    if (Pid1 == 0) {
+        printf("child 1  PID %d PPID %d\n", getpid(), getppid());
+       
+        exit(0);
+    } else {
+        Pid2 = fork();
+        if (Pid2 == 0) {
+            printf("child2 : PID = %d, PPID = %d\n", getpid(), getppid());
+        
             exit(0);
+        } else {
+            Pid3 = fork();
+            if (Pid3 == 0) {
+                Printf ("child3  PID = %d, PPID = %d\n", getpid(), getppid());
+                exit(0);
+            } else {
+                Wait(NULL);
+                Wait(NULL);
+                Wait(NULL);
+                Printf ("Parent Process (PID %d) Finished.\n", getpid());
+            }
         }
+        return 0;
     }
-    sleep(2); // Let children print first
-    printf("parent_process (PID: %d)\n", getpid());
-    for (int i = 0; i < n; i++) wait(NULL);
-    return 0;
-}
-/*Sample output:
-$ ./parent_process 3 child_1 child_2 child_3
-child_1 (PID: 1234, PPID: 1231)
-child_2 (PID: 1235, PPID: 1231)
-child_3 (PID: 1236, PPID: 1231)
-parent_process (PID: 1231)
+/* Sample Output:
+Parent Process Started: PID 2107
+child 1 PID 2108 PPID 2107
+child2 : PID = 2109 PPID = 2107
+child3 PID = 2110, PPID = 2107
+Parent Process (2107) Finished
 */
